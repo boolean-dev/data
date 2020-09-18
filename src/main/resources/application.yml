@@ -2,15 +2,16 @@ server:
   port: 8080
 spring:
   jpa:
-    database: mysql
+    database: h2
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/data?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    username: root
+#    password: 123456
+    driver-class-name: org.h2.Driver
+    data: classpath:/sql/init-data.sql
 logging:
   level:
     org:
