@@ -17,8 +17,6 @@ import javax.persistence.Id;
  */
 @Data
 @Entity
-@FilterDef(name = "appFilter", parameters = {@ParamDef(name = "appIds", type = "long")})
-@Filter(name = "appFilter", condition = "app_id IN (:appIds)")
 public class User extends AppBaseEntity{
 
     @Id

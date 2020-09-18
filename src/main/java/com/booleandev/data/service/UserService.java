@@ -1,8 +1,9 @@
 package com.booleandev.data.service;
 
-import com.booleandev.data.aop.FtlFilter;
+import com.booleandev.data.aop.DbFilter;
 import com.booleandev.data.dao.UserRepository;
 import com.booleandev.data.entity.User;
+import com.booleandev.data.enums.JpaFilterType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,9 +32,8 @@ public class UserService  {
     @Autowired
     private EntityManager entityManager;
 
-    @FtlFilter(entities = User.class)
+    @DbFilter(type = JpaFilterType.APP)
     public List<User> findAll() {
-//        accountService.findAll();1112313
         log.info(entityManager.toString());
         return userRepository.findAll();
     }

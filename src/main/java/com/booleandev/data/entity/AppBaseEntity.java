@@ -1,6 +1,5 @@
 package com.booleandev.data.entity;
 
-import com.booleandev.data.enums.JpaFilterType;
 import lombok.Data;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
@@ -8,8 +7,8 @@ import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.MappedSuperclass;
 
-import static com.booleandev.data.entity.AppFilterInter.APP_FILTER_NAME;
-import static com.booleandev.data.entity.AppFilterInter.APP_FILTER_PARAMETER;
+import static com.booleandev.data.entity.AppFilter.APP_FILTER_NAME;
+import static com.booleandev.data.entity.AppFilter.APP_FILTER_PARAMETER;
 
 
 /**
@@ -22,8 +21,8 @@ import static com.booleandev.data.entity.AppFilterInter.APP_FILTER_PARAMETER;
 @Data
 @MappedSuperclass
 @FilterDef(name = APP_FILTER_NAME, parameters = {@ParamDef(name = APP_FILTER_PARAMETER, type = "long")})
-@Filter(name = APP_FILTER_NAME, condition = "app_id = :appIds")
-public class AppBaseEntity implements AppFilterInter{
+@Filter(name = APP_FILTER_NAME, condition = "app_id IN (:appIds)")
+public class AppBaseEntity implements AppFilter {
 
     private Long appId;
 }

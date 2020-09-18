@@ -1,11 +1,6 @@
 package com.booleandev.data.entity;
 
-import org.hibernate.annotations.*;
-
 import javax.persistence.Column;
-import javax.persistence.Inheritance;
-import javax.persistence.MappedSuperclass;
-import java.lang.annotation.Inherited;
 
 /**
  * TODO
@@ -16,7 +11,7 @@ import java.lang.annotation.Inherited;
  */
 
 
-public interface AppFilterInter extends FtlJpaFilter{
+public interface AppFilter extends BaseFilter {
 
     public static final String APP_FILTER_PARAMETER = "appIds";
     public static final String  APP_FILTER_NAME = "appFilter";

@@ -21,6 +21,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Target({ElementType.TYPE,ElementType.METHOD})
 @Retention(RUNTIME)
-public @interface FtlFilter {
+public @interface DbFilter {
     JpaFilterType[] type() default JpaFilterType.NONE;
 }

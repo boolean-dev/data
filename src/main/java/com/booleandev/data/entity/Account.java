@@ -17,7 +17,7 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-public class Account implements AppFilterInter {
+public class Account implements AppFilter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

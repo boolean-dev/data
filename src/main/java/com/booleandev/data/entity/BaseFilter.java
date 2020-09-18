@@ -7,5 +7,5 @@ package com.booleandev.data.entity;
  * @title: FtlFilter
  * @date 2020/9/17 16:38
  */
-public interface FtlJpaFilter {
+public interface BaseFilter {
 }
