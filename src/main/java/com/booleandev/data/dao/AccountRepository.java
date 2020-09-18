@@ -12,5 +12,9 @@ import org.springframework.stereotype.Repository;
  * @date 2020/8/14 11:49
  */
 @Repository
-public interface AccountRepository extends JpaRepository<Account, Long> {
+public class AccountRepository extends BaseRepository<Account, Long> {
+
+    public AccountRepository() {
+        super(Account.class);
+    }
 }

@@ -1,5 +1,6 @@
 package com.booleandev.data.entity;
 
+import com.booleandev.data.filter.AppFilter;
 import lombok.Data;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
@@ -7,8 +8,8 @@ import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.MappedSuperclass;
 
-import static com.booleandev.data.entity.AppFilter.APP_FILTER_NAME;
-import static com.booleandev.data.entity.AppFilter.APP_FILTER_PARAMETER;
+import static com.booleandev.data.filter.AppFilter.APP_FILTER_NAME;
+import static com.booleandev.data.filter.AppFilter.APP_FILTER_PARAMETER;
 
 
 /**

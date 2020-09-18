@@ -4,6 +4,7 @@ import com.booleandev.data.aop.DbFilter;
 import com.booleandev.data.dao.AccountRepository;
 import com.booleandev.data.entity.Account;
 import com.booleandev.data.enums.JpaFilterType;
+import com.booleandev.data.filter.EnableFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,8 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class AccountService {
+@DbFilter
+public class AccountService implements EnableFilter<Account> {
 
     @Autowired
     private AccountRepository accountRepository;
@@ -28,9 +30,13 @@ public class AccountService {
     @Autowired
     private EntityManager entityManager;
 
-    @DbFilter(type = JpaFilterType.APP)
     public List<Account> findAll() {
         log.info(entityManager.toString());
         return accountRepository.findAll();
+    }
+
+    @Override
+    public Class<Account> getDomainClass() {
+        return Account.class;
     }
 }

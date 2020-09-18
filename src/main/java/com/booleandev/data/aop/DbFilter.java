@@ -23,4 +23,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface DbFilter {
     JpaFilterType[] type() default JpaFilterType.NONE;
+
+    boolean enable() default true;
 }

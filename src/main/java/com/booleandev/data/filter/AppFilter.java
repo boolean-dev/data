@@ -1,4 +1,4 @@
-package com.booleandev.data.entity;
+package com.booleandev.data.filter;
 
 import javax.persistence.Column;
 
@@ -11,7 +11,7 @@ import javax.persistence.Column;
  */
 
 
-public interface AppFilter extends BaseFilter {
+public interface AppFilter{
 
     public static final String APP_FILTER_PARAMETER = "appIds";
     public static final String  APP_FILTER_NAME = "appFilter";

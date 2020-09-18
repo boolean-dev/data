@@ -1,7 +1,9 @@
 package com.booleandev.data.aop;
 
-import com.booleandev.data.entity.AppFilter;
+import com.booleandev.data.filter.AppFilter;
+import com.booleandev.data.filter.ClientFilter;
 import com.booleandev.data.enums.JpaFilterType;
+import com.booleandev.data.filter.EnableFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -26,7 +28,7 @@ public class DbFilterAspect {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Pointcut("@annotation(com.booleandev.data.aop.DbFilter)")
+    @Pointcut("@annotation(com.booleandev.data.aop.DbFilter) || @within(com.booleandev.data.aop.DbFilter)")
     public void pointcut() {
     }
 
@@ -36,30 +38,53 @@ public class DbFilterAspect {
         try{
             //从上下文里面获取 owerId，这个 Id 在 web 中就已经存好了
             MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
-            Method method = methodSignature.getMethod();
-            DbFilter dbFilter = method.getAnnotation(DbFilter.class);
-            JpaFilterType [] filterTypes = dbFilter.type();
 
-            if (filterTypes.length == 1 && JpaFilterType.NONE.equals(filterTypes[0])) {
-                return pjp.proceed();
-            }
-            for (JpaFilterType filterType : filterTypes) {
-                switch (filterType) {
-                    case APP:
-                        //do something
-                        addAppFilter();
-                        break;
-                    case CLIENT:
-                        // do something
-                        addClientFilter();
-                        break;
-                    case NONE:
-                        break;
-                    default:
-                        break;
 
+            // 注解在类上，必需继承 EnableFilter 方法，并且实现 getDomainClass
+            if (EnableFilter.class.isAssignableFrom(pjp.getTarget().getClass())) {
+                EnableFilter enableFilter = (EnableFilter) pjp.getTarget();
+                Class c = enableFilter.getDomainClass();
+                if (AppFilter.class.isAssignableFrom(c)) {
+                    // do something
+                    // 添加 appFilter 行权限
+                    log.info("------------------>添加 app 行权限");
+                    addAppFilter();
+                }
+                if (ClientFilter.class.isAssignableFrom(pjp.getTarget().getClass())) {
+                    // do something
+                    log.info("------------------>添加 client 行权限");
                 }
             }
+
+
+            Method method = methodSignature.getMethod();
+            DbFilter dbFilter = method.getAnnotation(DbFilter.class);
+            // 注解在方法之上，JpaFilterType一定要有值，方便添加行权限
+            if (dbFilter != null) {
+                JpaFilterType [] filterTypes = dbFilter.type();
+
+                if (filterTypes.length == 1 && JpaFilterType.NONE.equals(filterTypes[0])) {
+                    return pjp.proceed();
+                }
+                for (JpaFilterType filterType : filterTypes) {
+                    switch (filterType) {
+                        case APP:
+                            //do something
+                            addAppFilter();
+                            break;
+                        case CLIENT:
+                            // do something
+                            addClientFilter();
+                            break;
+                        case NONE:
+                            break;
+                        default:
+                            break;
+
+                    }
+                }
+            }
+
             return pjp.proceed();
         }catch(Throwable e){
             e.printStackTrace();
