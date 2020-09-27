@@ -1,6 +1,8 @@
 package com.booleandev.data.service;
 
 import com.booleandev.data.aop.DbFilter;
+import com.booleandev.data.aop.First;
+import com.booleandev.data.aop.Second;
 import com.booleandev.data.dao.UserRepository;
 import com.booleandev.data.entity.User;
 import com.booleandev.data.enums.JpaFilterType;
@@ -34,7 +36,9 @@ public class UserService  implements EnableFilter<User> {
     @Autowired
     private EntityManager entityManager;
 
-    @DbFilter(type = JpaFilterType.APP)
+//    @DbFilter(type = JpaFilterType.APP)
+    @First
+    @Second
     public List<User> findAll() {
         log.info(entityManager.toString());
         return userRepository.findAll();

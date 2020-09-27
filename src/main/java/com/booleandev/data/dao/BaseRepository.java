@@ -34,7 +34,7 @@ import java.util.*;
  * @title: BaseRepository
  * @date 2020/9/18 14:19
  */
-@DbFilter
+//@DbFilter
 public class BaseRepository<T, ID> implements JpaRepository<T, ID>, JpaSpecificationExecutor<T>, EnableFilter<T> {
 
 
