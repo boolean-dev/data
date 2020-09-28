@@ -2,7 +2,7 @@ package com.booleandev.data.aop;
 
 import com.booleandev.data.filter.AppFilter;
 import com.booleandev.data.filter.ClientFilter;
-import com.booleandev.data.enums.JpaFilterType;
+import com.booleandev.data.enums.FilterType;
 import com.booleandev.data.filter.EnableFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -17,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -36,53 +37,25 @@ public class DbFilterAspect {
     public Object around(ProceedingJoinPoint pjp) {
 
         try{
-            //从上下文里面获取 owerId，这个 Id 在 web 中就已经存好了
-            MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
 
-
-            // 注解在类上，必需继承 EnableFilter 方法，并且实现 getDomainClass
-            if (EnableFilter.class.isAssignableFrom(pjp.getTarget().getClass())) {
-                EnableFilter enableFilter = (EnableFilter) pjp.getTarget();
-                Class c = enableFilter.getDomainClass();
-                if (AppFilter.class.isAssignableFrom(c)) {
-                    // do something
-                    // 添加 appFilter 行权限
-                    log.info("------------------>添加 app 行权限");
-                    addAppFilter();
-                }
-                if (ClientFilter.class.isAssignableFrom(pjp.getTarget().getClass())) {
-                    // do something
-                    log.info("------------------>添加 client 行权限");
-                }
+            // 校验当前切点所在的类是否实现了 EnableFilter 接口
+            if (!EnableFilter.class.isAssignableFrom(pjp.getTarget().getClass())) {
+                return pjp.proceed();
             }
 
+            EnableFilter enableFilter = (EnableFilter) pjp.getTarget();
 
-            Method method = methodSignature.getMethod();
-            DbFilter dbFilter = method.getAnnotation(DbFilter.class);
-            // 注解在方法之上，JpaFilterType一定要有值，方便添加行权限
-            if (dbFilter != null) {
-                JpaFilterType [] filterTypes = dbFilter.type();
+            // 作用于方法上
+            MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
+            DbFilter dbAnn = methodSignature.getMethod().getAnnotation(DbFilter.class);
+            if (dbAnn != null) {
+                return this.filterByAnn(dbAnn, pjp, enableFilter);
+            }
 
-                if (filterTypes.length == 1 && JpaFilterType.NONE.equals(filterTypes[0])) {
-                    return pjp.proceed();
-                }
-                for (JpaFilterType filterType : filterTypes) {
-                    switch (filterType) {
-                        case APP:
-                            //do something
-                            addAppFilter();
-                            break;
-                        case CLIENT:
-                            // do something
-                            addClientFilter();
-                            break;
-                        case NONE:
-                            break;
-                        default:
-                            break;
-
-                    }
-                }
+            // 作用于类上
+            DbFilter claDbAnn = (DbFilter) pjp.getTarget().getClass().getAnnotation(DbFilter.class);
+            if (claDbAnn != null) {
+                return this.filterByAnn(claDbAnn, pjp, enableFilter);
             }
 
             return pjp.proceed();
@@ -108,7 +81,62 @@ public class DbFilterAspect {
                 .setParameterList(AppFilter.APP_FILTER_PARAMETER, appIds);
     }
 
+    /**
+     * 此方法在实际操作中，可从 localThread 中获取
+     * @return  appList
+     */
     private Long getApp() {
         return (long) new Random().nextInt(10);
+    }
+
+    private void addAllFilter(EnableFilter enableFilter) {
+        Class c = enableFilter.getDomainClass();
+        if (AppFilter.class.isAssignableFrom(c)) {
+            // 添加 appFilter 行权限
+            log.info("------------------>添加 app 行权限");
+            addAppFilter();
+        }
+        if (ClientFilter.class.isAssignableFrom(c)) {
+            // do something
+            log.info("------------------>添加 client 行权限");
+        }
+    }
+
+    private Object filterByAnn(DbFilter dbAnn, ProceedingJoinPoint pjp, EnableFilter enableFilter) throws Throwable {
+        // 如果 enable 为 false，则不执行过滤
+        if (!dbAnn.enable()) {
+            return pjp.proceed();
+        }
+
+        FilterType[] types = dbAnn.filters();
+
+        // 包含 NONE，则不添加
+        if (Arrays.asList(types).contains(FilterType.NONE)) {
+            return pjp.proceed();
+        }
+
+        // default ，如果包含 ALL，则添加所有拦截器
+        if (Arrays.asList(types).contains(FilterType.ALL)) {
+            this.addAllFilter(enableFilter);
+            return pjp.proceed();
+        }
+
+        for (FilterType type : types) {
+            switch (type) {
+                case CLIENT:
+                    // do something
+                    break;
+                case APP:
+                    // do something
+                    break;
+                case NONE:
+                case ALL:
+                    break;
+                default:
+                    break;
+            }
+            return pjp.proceed();
+        }
+        return pjp.proceed();
     }
 }

@@ -7,20 +7,21 @@ package com.booleandev.data.enums;
  * @title: JpaFilterType
  * @date 2020/9/17 16:00
  */
-public enum  JpaFilterType {
+public enum FilterType {
 
     /**
      * APP: app行权限
      * CLIENT: client 行权限
      */
     NONE(0, "none"),
-    APP(1,"appFilter"),
-    CLIENT(2,"clientFilter");
+    ALL(1, "all"),
+    APP(2,"appFilter"),
+    CLIENT(3,"clientFilter");
 
     private int value;
     private String name;
 
-    JpaFilterType(int value, String name) {
+    FilterType(int value, String name) {
         this.value = value;
         this.name = name;
     }

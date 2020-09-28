@@ -3,7 +3,7 @@ package com.booleandev.data.service;
 import com.booleandev.data.aop.DbFilter;
 import com.booleandev.data.dao.UserRepository;
 import com.booleandev.data.entity.User;
-import com.booleandev.data.enums.JpaFilterType;
+import com.booleandev.data.enums.FilterType;
 import com.booleandev.data.filter.EnableFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class UserService  implements EnableFilter<User> {
     @Autowired
     private EntityManager entityManager;
 
-    @DbFilter(type = JpaFilterType.APP)
+//    @DbFilter(filters = FilterType.APP)
     public List<User> findAll() {
         log.info(entityManager.toString());
         return userRepository.findAll();

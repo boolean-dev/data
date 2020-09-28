@@ -3,7 +3,7 @@ package com.booleandev.data.filter;
 import javax.persistence.Column;
 
 /**
- * TODO
+ * 客户行权限拦截器
  *
  * @author Jiantao Yan
  * @title: AppFilter
@@ -11,10 +11,10 @@ import javax.persistence.Column;
  */
 
 
-public interface ClientFilter{
+public interface ClientFilter extends IFilter {
 
-    public static final String APP_FILTER_PARAMETER = "clientIds";
-    public static final String  APP_FILTER_NAME = "clientFilter";
+    String APP_FILTER_PARAMETER = "clientIds";
+    String APP_FILTER_NAME = "clientFilter";
 
     @Column(name = "client")
     Long getAppId();

@@ -1,7 +1,6 @@
 package com.booleandev.data.dao;
 
 import com.booleandev.data.aop.DbFilter;
-import com.booleandev.data.enums.JpaFilterType;
 import com.booleandev.data.filter.EnableFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -34,7 +33,7 @@ import java.util.*;
  * @title: BaseRepository
  * @date 2020/9/18 14:19
  */
-@DbFilter
+//@DbFilter
 public class BaseRepository<T, ID> implements JpaRepository<T, ID>, JpaSpecificationExecutor<T>, EnableFilter<T> {
 
 

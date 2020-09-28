@@ -3,13 +3,12 @@ package com.booleandev.data.service;
 import com.booleandev.data.aop.DbFilter;
 import com.booleandev.data.dao.AccountRepository;
 import com.booleandev.data.entity.Account;
-import com.booleandev.data.enums.JpaFilterType;
+import com.booleandev.data.enums.FilterType;
 import com.booleandev.data.filter.EnableFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 /**
@@ -21,17 +20,13 @@ import java.util.List;
  */
 @Slf4j
 @Service
-@DbFilter
+@DbFilter(filters = FilterType.APP)
 public class AccountService implements EnableFilter<Account> {
 
     @Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
-    private EntityManager entityManager;
-
     public List<Account> findAll() {
-        log.info(entityManager.toString());
         return accountRepository.findAll();
     }
 
