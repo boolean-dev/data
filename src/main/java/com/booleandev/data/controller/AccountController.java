@@ -31,6 +31,9 @@ public class AccountController {
 
     @PostMapping("/")
     public User insert(@RequestBody User user) {
+
+
+
         log.info("------>user={}", user);
         user.setEmail("--" + System.currentTimeMillis());
         return userRepository.save(user);
