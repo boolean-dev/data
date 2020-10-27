@@ -41,6 +41,16 @@ public class AccountController {
 
     @GetMapping("/")
     public List<Account> list() {
+
+
+        log.info("------>user={}");
+        log.info("------>user={}");
+        log.info("------>user={}");
+        log.info("------>user={}");
+        log.info("------>user={}");
+
+
+
         return accountService.findAll();
     }
 }
